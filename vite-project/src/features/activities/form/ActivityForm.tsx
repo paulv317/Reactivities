@@ -4,12 +4,14 @@ import { ChangeEvent, useState } from "react";
 
 interface Props {
   selectedActivity: Activity | undefined;
+  submitting: boolean;
   handleFormClose: () => void;
   handleCreateOrEditActivity: (activity: Activity) => void;
 }
 
 const ActivityForm = ({
   selectedActivity,
+  submitting,
   handleFormClose,
   handleCreateOrEditActivity,
 }: Props) => {
@@ -59,6 +61,7 @@ const ActivityForm = ({
         />
         <Form.Input
           placeholder="Date"
+          type='date'
           name="date"
           value={activity.date}
           onChange={handleInputChange}
@@ -77,6 +80,7 @@ const ActivityForm = ({
         />
         <Button
           onClick={handleSubmit}
+          loading={submitting}
           floated="right"
           positive
           type="submit"

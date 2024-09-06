@@ -7,9 +7,10 @@ import ActivityForm from "../form/ActivityForm";
 interface ActivityDashboardProps {
   activities: Activity[];
   selectedActivity: Activity | undefined;
+  submitting: boolean;
+  editMode: boolean;
   handleSelectActivity: (id: string) => void;
   handleCancelSelectedActivity: () => void;
-  editMode: boolean;
   handleFormOpen: (id: string) => void;
   handleFormClose: () => void;
   handleCreateOrEditActivity: (activity: Activity) => void;
@@ -20,6 +21,7 @@ const ActivityDashboard = ({
   activities,
   selectedActivity,
   editMode,
+  submitting,
   handleSelectActivity,
   handleCancelSelectedActivity,
   handleFormOpen,
@@ -32,6 +34,7 @@ const ActivityDashboard = ({
       <Grid.Column width="10">
         <ActivityList
           activities={activities}
+          submitting={submitting}
           handleSelectActivity={handleSelectActivity}
           handleDeleteActivity={handleDeleteActivity}
         />
@@ -47,6 +50,7 @@ const ActivityDashboard = ({
         {editMode && (
           <ActivityForm
             selectedActivity={selectedActivity}
+            submitting={submitting}
             handleFormClose={handleFormClose}
             handleCreateOrEditActivity={handleCreateOrEditActivity}
           />
