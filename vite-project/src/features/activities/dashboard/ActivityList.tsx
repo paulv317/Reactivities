@@ -1,31 +1,26 @@
 import { Button, Item, Label, Segment } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
 import { SyntheticEvent, useState } from "react";
+import { useStore } from "../../../app/stores/store";
+import { observer } from "mobx-react-lite";
 
-interface Props {
-  activities: Activity[];
-  submitting: boolean;
-  handleSelectActivity: (id: string) => void;
-  handleDeleteActivity: (id: string) => void;
-}
+const ActivityList = () => {
+  const { activityStore } = useStore();
+  const { deleteActivity, loading, activitiesByDate } = activityStore;
 
-const ActivityList = ({
-  activities,
-  submitting,
-  handleSelectActivity,
-  handleDeleteActivity,
-}: Props) => {
   const [target, setTarget] = useState("");
 
-  const handleActivityDelete = (e: SyntheticEvent<HTMLButtonElement>, id: string) => {
+  const handleActivityDelete = (
+    e: SyntheticEvent<HTMLButtonElement>,
+    id: string
+  ) => {
     setTarget(e.currentTarget.name);
-    handleDeleteActivity(id);
+    deleteActivity(id);
   };
 
   return (
     <Segment>
       <Item.Group divided>
-        {activities.map((activity) => (
+        {activitiesByDate.map((activity) => (
           <Item key={activity.id}>
             <Item.Content>
               <Item.Header as="a">{activity.title}</Item.Header>
@@ -41,11 +36,11 @@ const ActivityList = ({
                   floated="right"
                   content="view"
                   color="blue"
-                  onClick={() => handleSelectActivity(activity.id)}
+                  onClick={() => activityStore.selectActivity(activity.id)}
                 />
                 <Button
                   name={activity.id}
-                  loading={submitting && target === activity.id}
+                  loading={loading && target === activity.id}
                   floated="right"
                   content="delete"
                   color="red"
@@ -61,4 +56,4 @@ const ActivityList = ({
   );
 };
 
-export default ActivityList;
+export default observer(ActivityList);

@@ -1,20 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Button, Form, Segment } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
 import { ChangeEvent, useState } from "react";
+import { useStore } from "../../../app/stores/store";
+import { observer } from "mobx-react-lite";
 
-interface Props {
-  selectedActivity: Activity | undefined;
-  submitting: boolean;
-  handleFormClose: () => void;
-  handleCreateOrEditActivity: (activity: Activity) => void;
-}
+const ActivityForm = () => {
+  const { activityStore } = useStore();
+  const { selectedActivity, createActivity, updateActivity, loading } = activityStore;
 
-const ActivityForm = ({
-  selectedActivity,
-  submitting,
-  handleFormClose,
-  handleCreateOrEditActivity,
-}: Props) => {
   const initialState = selectedActivity ?? {
     id: "",
     title: "",
@@ -28,7 +21,7 @@ const ActivityForm = ({
   const [activity, setActivity] = useState(initialState);
 
   const handleSubmit = () => {
-    handleCreateOrEditActivity(activity);
+    activity.id ? updateActivity(activity) : createActivity(activity)
   };
 
   const handleInputChange = (
@@ -61,7 +54,7 @@ const ActivityForm = ({
         />
         <Form.Input
           placeholder="Date"
-          type='date'
+          type="date"
           name="date"
           value={activity.date}
           onChange={handleInputChange}
@@ -80,14 +73,14 @@ const ActivityForm = ({
         />
         <Button
           onClick={handleSubmit}
-          loading={submitting}
+          loading={loading}
           floated="right"
           positive
           type="submit"
           content="Submit"
         />
         <Button
-          onClick={handleFormClose}
+          onClick={activityStore.closeForm}
           floated="right"
           type="button"
           content="Cancel"
@@ -97,4 +90,4 @@ const ActivityForm = ({
   );
 };
 
-export default ActivityForm;
+export default observer(ActivityForm);
